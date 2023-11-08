@@ -1,0 +1,44 @@
+<section class="d-flex justify-content-center align-items-center login">
+  <form class="formLogin" [formGroup]="loginForm">
+    <mat-label class="label-title">Login</mat-label>
+
+    <!-- Email -->
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        type="email"
+        matInput
+        formControlName="email"
+        placeholder="example@email.com"
+      />
+
+      @if (loginForm.get('email')?.hasError('required')) {
+      <mat-error> Campo email é obrigatório.</mat-error>
+      }@else {
+      <mat-error> Informe um e-mail valido.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password" />
+
+      @if(loginForm.get('password')?.hasError('required')){
+      <mat-error> Campo password é obrigatório.</mat-error>
+      }@else {
+      <mat-error> Informe uma senha válida.</mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      class="btn-login"
+      mat-flat-button
+      color="primary"
+      [disabled]="!loginForm.valid"
+      (click)="login()"
+    >
+      Login
+    </button>
+  </form>
+</section>
