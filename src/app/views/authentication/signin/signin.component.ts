@@ -13,6 +13,7 @@ import { TAuthRequest } from '../../../shared/types/auth/TAuthRequest';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../shared/utils/notification/notification.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-signin',
@@ -22,14 +23,13 @@ import { NotificationService } from '../../../shared/utils/notification/notifica
   styleUrl: './signin.component.scss',
 })
 export class SigninComponent implements OnInit {
-  public invalidCredentials!: boolean;
   public loginForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notification: NotificationService
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +37,6 @@ export class SigninComponent implements OnInit {
   }
 
   private initializeVariables(): void {
-    this.invalidCredentials = false;
     this.loginForm = this.formBuilder.group({
       email: [
         null,
@@ -57,19 +56,30 @@ export class SigninComponent implements OnInit {
   }
 
   public login(): void {
-    let request: TAuthRequest = {
+    this.loading(true);
+    const request: TAuthRequest = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
 
-    this.authService.login(request).subscribe({
-      next: (res) => {
-        // this.router.navigate(['/home']);
-      },
-      error: (e) => {
-        this.notification.create('Erro ao fazer login.');
-      },
-      complete: () => {},
-    });
+    this.authService
+      .login(request)
+      .pipe(
+        finalize(() => {
+          this.loading(false);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: (e) => {
+          this.notificationService.create('Erro ao fazer login.');
+        },
+      });
+  }
+
+  private loading(state: boolean): void {
+    this.notificationService.setLoading(state);
   }
 }
