@@ -14,8 +14,8 @@ import { TokenService } from '../token/token.service';
 })
 export class AuthService {
   private readonly apiUrl: string = environment.apiUrl;
-
   private currentUserSubject: BehaviorSubject<User | null>;
+
   constructor(private http: HttpClient, private tokenService: TokenService) {
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
   }

@@ -1,0 +1,14 @@
+<mat-toolbar>
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Finances</span>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side">
+    <!-- Conteudo do menu -->
+  </mat-drawer>
+</mat-drawer-container>
+<router-outlet></router-outlet>
