@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SigninComponent } from './signin.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe(`${SigninComponent.name}`, () => {
   let component: SigninComponent;
@@ -11,12 +12,10 @@ describe(`${SigninComponent.name}`, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        SigninComponent,
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
-      ],
-    }).compileComponents();
+    imports: [SigninComponent,
+        BrowserAnimationsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
     fixture = TestBed.createComponent(SigninComponent);
     component = fixture.componentInstance;

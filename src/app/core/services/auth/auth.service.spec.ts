@@ -1,14 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TAuthRequest } from '../../../shared/types/auth/TAuthRequest';
 import { IGenericResponse } from '../../../shared/interfaces/IGenericResponse';
 import { TAuthResponse } from '../../../shared/types/auth/TAuthResponse';
 import { environment } from '../../../../environments/environment.development';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe(`${AuthService.name}`, () => {
   let service: AuthService;
@@ -20,7 +18,7 @@ describe(`${AuthService.name}`, () => {
   };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
+    TestBed.configureTestingModule({ imports: [], providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()] });
     service = TestBed.inject(AuthService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
