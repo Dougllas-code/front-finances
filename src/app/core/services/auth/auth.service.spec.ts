@@ -18,9 +18,19 @@ describe(`${AuthService.name}`, () => {
   };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [], providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
+    });
     service = TestBed.inject(AuthService);
     httpTestingController = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it(`${AuthService.name} dado que o service foi instanciado quando criado então ele deve existir.`, () => {
