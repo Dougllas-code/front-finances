@@ -8,6 +8,7 @@ import { IGenericResponse } from '../../../shared/interfaces/IGenericResponse';
 import { TAuthResponse } from '../../../shared/types/auth/TAuthResponse';
 import { ResponseType } from '../../../shared/enums/responseType';
 import { TokenService } from '../token/token.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,11 @@ export class AuthService {
   private readonly apiUrl: string = environment.apiUrl;
   private currentUserSubject: BehaviorSubject<User | null>;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+    private router: Router
+  ) {
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
   }
 
@@ -38,9 +43,14 @@ export class AuthService {
   public logout() {
     this.currentUserSubject.next(null);
     this.tokenService.deleteToken();
+    this.router.navigate(['/signin']);
   }
 
   get userData(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  get authenticatedUser(): boolean {
+    return this.tokenService.getToken() ? true : false;
   }
 }

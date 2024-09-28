@@ -10,8 +10,8 @@ export class TokenService {
     localStorage.setItem(this.key, token);
   }
 
-  public getToken(): string {
-    return localStorage.getItem(this.key) || '';
+  public getToken(): string | null{
+    return localStorage.getItem(this.key) || null;
   }
 
   public deleteToken(): void {
