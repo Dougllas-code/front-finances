@@ -14,6 +14,10 @@ describe(`${TokenService.name}`, () => {
     service.setToken(token);
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
+
   it(`${TokenService.name} dado que o service foi instanciado quando criado então ele deve existir.`, () => {
     expect(service).toBeTruthy();
   });

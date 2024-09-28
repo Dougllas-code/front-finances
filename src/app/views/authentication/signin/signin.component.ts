@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -13,7 +13,7 @@ import { TAuthRequest } from '../../../shared/types/auth/TAuthRequest';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../shared/utils/notification/notification.service';
-import { finalize } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-signin',
@@ -22,18 +22,24 @@ import { finalize } from 'rxjs';
   templateUrl: './signin.component.html',
   styleUrl: './signin.component.scss',
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
   public loginForm!: FormGroup;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeVariables();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initializeVariables(): void {
@@ -65,6 +71,7 @@ export class SigninComponent implements OnInit {
     this.authService
       .login(request)
       .pipe(
+        takeUntil(this.destroy$),
         finalize(() => {
           this.loading(false);
         })
